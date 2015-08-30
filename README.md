@@ -10,12 +10,12 @@ GPIO  NodePin Function
 4     2       LED Green
 
 
- PullUp - RST             TXD -
-        - ADC             RXD -
-      1 - CH_PD        (1)GPIO4 ->YELLOW
-    RST<- GPIO16(0)    (2)GPIO5 ->GREEN
-    SCL<- GPIO14(5)       GPIO0 - PRG
-   BLUE<- GPIO12(6)    (4)GPIO2 - RED
-    SDA<- GPIO13         GPIO15 ->GND
-        - VCC               GND ->GND
-        
+       PullUp - RST             TXD -
+              - ADC             RXD -
+            1 - CH_PD        (1)GPIO4 ->YELLOW
+          RST<- GPIO16(0)    (2)GPIO5 ->GREEN
+          SCL<- GPIO14(5)       GPIO0 - PRG
+         BLUE<- GPIO12(6)    (4)GPIO2 - RED
+          SDA<- GPIO13         GPIO15 ->GND
+              - VCC               GND ->GND
+              
