@@ -24,11 +24,11 @@ local moduleName = ...
 local M = {}
 _G[moduleName] = M
 
-local responseCallbackFunction
+responseCallbackFunction = nil
 
 function M.sendData(data, onResponseCallback)
   sendData(data[0] or "", data[1] or "", data[2] or "")
-  responseCallbackFunction = onResponseCallback
+  M.responseCallbackFunction = onResponseCallback
 end
 
 -- We use thingspeak as backend for now, this will wrap RIoT calls
@@ -46,7 +46,7 @@ function sendData(f1, f2, f3)
 end
 
 function responseReceived(payload)
-  responseCallbackFunction()
+  M.responseCallbackFunction()
 end
 
 return M
