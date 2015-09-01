@@ -1,3 +1,6 @@
+--@otaCOM COM4
+--@compile
+
 -- ***************************************************************************
 -- SI7021 module for ESP8266 with nodeMCU
 -- Si7021 compatible tested 2015-1-22

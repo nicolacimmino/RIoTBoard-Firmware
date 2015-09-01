@@ -1,5 +1,5 @@
----@otaCOM COM4
---@otaIP 192.168.1.81
+--@otaCOM COM4
+---@otaIP 192.168.1.81
 --
 -- Firmware for ESP8266 OTA Server.
 --  Copyright (C) 2015 Nicola Cimmino
@@ -19,6 +19,11 @@
 
 -- This code has been tested on an ESP-12 module running NodeMCU
 
+gpio.mode(1, gpio.INPUT)
+gpio.mode(6, gpio.INPUT)
+if gpio.read(1) == 1 and gpio.read(6) == 1 then
+  return
+end
 
 -- We start in both station and AP so that if the device
 -- is moved to a new WiFi it's still possible to telnet
@@ -47,27 +52,29 @@ riot = require("riot")
 -- Set config flags
 dofile("config.lua")
 
+board.checkBatteryStatus()
+
 -- If you have a ssd1306 display this will show vital
 -- information such as the AP name and current IP and status.
 -- If not comment this.
-dofile("display.lc")
+if DISPLAY_PRESENT then
+  pcall(
+    function()
+      dofile("display.lc")
+    end)
+end
 
 -- The actual telnet server that will be contacted by the
 -- OTA utility to send up the new files.
-dofile("telnet.lc")
+if ENABLE_OTA then
+  pcall(
+    function()
+      dofile("ota_server.lc")
+    end)
+end
 
+-- User application
 pcall(
   function()
     dofile("application.lua")
   end)
-
--- Bring down the ESP to deep sleep.
-function shutdown()
-  tmr.stop(0)
-  disp:sleepOn() 
-	node.dsleep(0, nil)
-end
-
--- Watchdog, if nothing happens (ie no remote connection)
--- shuth down after 2 minutes to preserve battery.
---tmr.alarm(0, 120000, 0, function() shutdown() end)

@@ -1,5 +1,6 @@
---@otaIP 192.168.1.81
----@otaCOM COM4
+---@otaIP 192.168.1.81
+--@otaCOM COM4
+--@compile
 
 -- Board module is part of Framework for RIoTBoard.
 -- Provides control over the board I/O functionality.
@@ -45,6 +46,18 @@ end
 
 function M.bindBlue(bindTo)
   bind(6, bindTo)
+end
+
+-- Check current battery status and shutdown
+-- forcefully if very depleted.
+function M.checkBatteryStatus()
+  if adc.readvdd33()/1000 < 3.1 then
+    M.shutdown()
+  end
+end
+
+function M.shutdown()
+  node.dsleep(0,0)
 end
 
 function bind(pin, bindTo)

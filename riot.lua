@@ -1,5 +1,6 @@
---@otaIP 192.168.1.81
----@otaCOM COM4
+---@otaIP 192.168.1.81
+--@otaCOM COM4
+--@compile
 
 -- RIoT module is part of Framework for RIoTBoard.
 -- Provides control over the board I/O functionality.
@@ -23,21 +24,29 @@ local moduleName = ...
 local M = {}
 _G[moduleName] = M
 
-function M.sendData(data)
+local responseCallbackFunction
+
+function M.sendData(data, onResponseCallback)
   sendData(data[0] or "", data[1] or "", data[2] or "")
+  responseCallbackFunction = onResponseCallback
 end
 
 -- We use thingspeak as backend for now, this will wrap RIoT calls
 --  when RIoT backend ready.
 function sendData(f1, f2, f3)      
   local conn=net.createConnection(net.TCP, 0)
-  --conn:on("receive", function(conn, payload) responseReceived(payload) end )
+  conn:on("receive", function(conn, payload) responseReceived(payload) end )
   conn:connect(80,"184.106.153.149")
   conn:send("GET /update?key=" .. TS_CHANNEL_KEY .. "&field1=" .. f1 
       .. "&field2=" .. f2
       .. "&field3=" .. f3
       .. " HTTP/1.1\r\nHost: api.thingspeak.com\r\n"
       .."Connection: close\r\nAccept: */*\r\n\r\n")
+  --conn:close()
+end
+
+function responseReceived(payload)
+  responseCallbackFunction()
 end
 
 return M
