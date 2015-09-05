@@ -1,6 +1,6 @@
 ---@otaIP 192.168.1.81
 --@otaCOM COM4
---@compile
+---@compile
 
 -- RIoT module is part of Framework for RIoTBoard.
 -- Provides control over the board I/O functionality.
@@ -26,6 +26,20 @@ _G[moduleName] = M
 
 responseCallbackFunction = nil
 
+function M.generateCopperNugget(itemData)
+  
+  local nugget = ""
+  local seed = 0
+  itemData = crypto.toBase64("Cu+" .. itemData)
+  
+  while string.sub(nugget, 1, 3) ~= "000" do
+    nugget = crypto.toHex(crypto.hmac("sha256", itemData, seed))
+    seed = seed + 1
+    tmr.wdclr()
+  end
+  print(nugget)
+end
+ 
 function M.sendData(data, onResponseCallback)
   sendData(data[0] or "", data[1] or "", data[2] or "")
   M.responseCallbackFunction = onResponseCallback
